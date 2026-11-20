@@ -667,7 +667,9 @@ constructor(
             ComponentKey(ComponentName(packageName, packageName + EMPTY_CLASS_NAME), user)
 
         // Ensures themed bitmaps in the icon cache are invalidated
-        @JvmField val RELEASE_VERSION = if (Flags.enableLauncherIconShapes()) 11 else 10
+        // Bumped for the built-in icon pack rendering changes: entries cached by older builds
+        // could contain the system default icon and would otherwise never be refreshed.
+        @JvmField val RELEASE_VERSION = if (Flags.enableLauncherIconShapes()) 12 else 11
 
         @JvmField val TABLE_NAME = "icons"
         @JvmField val COLUMN_ROWID = "rowid"

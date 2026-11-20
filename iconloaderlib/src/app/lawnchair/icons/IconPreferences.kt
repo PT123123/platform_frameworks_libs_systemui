@@ -19,7 +19,7 @@ private const val SHARED_PREFERENCES_KEY: String = "com.android.launcher3.prefs"
 val Context.prefs: SharedPreferences get() = applicationContext.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
 
 fun shouldWrapAdaptive(context: Context) = context.prefs.getBoolean("prefs_wrapAdaptive", true)
-fun Context.shouldTransparentBGIcons(): Boolean = prefs.getBoolean("prefs_transparentIconBackground", false)
+fun Context.shouldTransparentBGIcons(): Boolean = prefs.getBoolean("prefs_transparentIconBackground", true)
 fun Context.shouldShadowBGIcons(): Boolean = prefs.getBoolean("pref_shadowBGIcons", true)
 
 fun Context.isThemedIconsEnabled(): Boolean = prefs.getBoolean("themed_icons", false)

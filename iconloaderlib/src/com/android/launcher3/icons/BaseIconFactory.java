@@ -395,6 +395,16 @@ public class BaseIconFactory implements AutoCloseable {
         } else {
             if (icon instanceof AdaptiveIconDrawable) {
                 outScale[0] = ICON_VISIBLE_AREA_FACTOR;
+                if (shouldWrapAdaptive && hasTransparentBackground((AdaptiveIconDrawable) icon)) {
+                    AdaptiveIconDrawable adaptiveIcon = (AdaptiveIconDrawable) icon;
+                    Drawable monochrome = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                            ? adaptiveIcon.getMonochrome() : null;
+                    return new CustomAdaptiveIconDrawable(
+                            new ColorDrawable(IconPreferencesKt.getWrapperBackgroundColor(
+                                    mContext, icon)),
+                            adaptiveIcon.getForeground(),
+                            monochrome);
+                }
                 return icon;
             }
 
@@ -403,10 +413,20 @@ public class BaseIconFactory implements AutoCloseable {
                 return wrapToAdaptiveIcon(icon);
             } else {
                 scale = new IconNormalizer(mIconBitmapSize).getScale(icon);
+                if (icon instanceof ExtendedBitmapDrawable extended
+                        && extended.getMaxVisualScale() > 1f) {
+                    scale = Math.min(scale * 1.5f, extended.getMaxVisualScale());
+                }
                 outScale[0] = scale;
                 return icon;
             }
         }
+    }
+
+    private boolean hasTransparentBackground(AdaptiveIconDrawable icon) {
+        Drawable background = icon.getBackground();
+        return background == null || (background instanceof ColorDrawable
+                && Color.alpha(((ColorDrawable) background).getColor()) == 0);
     }
 
     /**
